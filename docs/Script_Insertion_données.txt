@@ -1,0 +1,70 @@
+USE bts_aero_agenda;
+
+-- =====================================================
+-- PROFESSEURS
+-- =====================================================
+INSERT INTO PROFESSEUR (nom, prenom) VALUES
+    ('FABRE',      'FRANCOIS'),
+    ('LELANT',     'CHRISTOPHE'),
+    ('FRISCIA',    'CHRISTOPHE'),
+    ('DEL NEGRO',  'ALEXIS'),
+    ('GUIVIER',    'PATRICE'),
+    ('PARIS',      'SEBASTIEN'),
+    ('ROUSSELLE',  'GAETAN'),
+    ('FEISSINIER', 'GILBERT'),
+    ('DALBY',      'JULIAN'),
+    ('LEGROS',     'HERVE'),
+    ('MERRIEN',    'PHILIPPE'),
+    ('NAVARRE',    'STEPHAN'),
+    ('ROUX',       'FLAVIEN');
+
+-- =====================================================
+-- MACHINES (Hélicoptères + Avions)
+-- =====================================================
+INSERT INTO MACHINE (nom, type, disponible) VALUES
+    -- Hélicoptères
+    ('H160 #PT01',       'Helicoptere', TRUE),
+    ('ECUREUIL H125',    'Helicoptere', TRUE),
+    ('ECUREUIL EVEREST', 'Helicoptere', TRUE),
+    ('BO 105',           'Helicoptere', TRUE),
+    ('DAUPHIN 365',      'Helicoptere', TRUE),
+    ('COLIBRI EC 120',   'Helicoptere', TRUE),
+    -- Avions
+    ('EPSILON',        'Avion', TRUE),
+    ('G1',             'Avion', TRUE),
+    ('CORVETTE',       'Avion', TRUE),
+    ('RALLYE',         'Avion', TRUE),
+    ('CESSNA F150 M',  'Avion', TRUE),
+    ('CESSNA 310',     'Avion', TRUE),
+    ('FOUGA MAGISTER', 'Avion', TRUE),
+    ('MIRAGE III',     'Avion', TRUE);
+
+-- =====================================================
+-- CLASSES
+-- =====================================================
+INSERT INTO CLASSE (nom) VALUES
+    ('2AERO1 G1'),
+    ('2AERO1 G2'),
+    ('2AERO2 G1'),
+    ('2AERO2 G2'),
+    ('2AERO3 G1'),
+    ('2AERO3 G2'),
+    ('1AERO1 STR'),
+    ('1AERO1 SYS'),
+    ('1AERO2 AVIO'),
+    ('1AERO2 SYS'),
+    ('1AERO3 STR'),
+    ('1AERO3 AVIO'),
+    ('TAERO1 STR'),
+    ('TAERO1 SYS'),
+    ('TAERO2 AVIO'),
+    ('TAERO2 SYS'),
+    ('TAERO3 STR'),
+    ('TAERO3 AVIO'),
+    ('CS AMT B1.1'),
+    ('CS HMT B1.3'),
+    ('CS B2 AVIO'),
+    ('BTS AERO1 G1'),
+    ('BTS AERO1 G2'),
+    ('BTS AERO2 G1'),
+    ('BTS AERO2 G2');

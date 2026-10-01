@@ -1,0 +1,54 @@
+-- =====================================================
+-- BASE DE DONNÉES : Module Information (affichage médias)
+-- SGBD : MySQL
+-- =====================================================
+
+CREATE DATABASE IF NOT EXISTS bts_aero_information
+    DEFAULT CHARACTER SET utf8mb4
+    DEFAULT COLLATE utf8mb4_unicode_ci;
+
+USE bts_aero_information;
+
+-- Table : MEDIA
+-- Selon le type de média :
+--   image / video → `url_fichier` est obligatoire (URL d'un fichier uploadé
+--                    ou d'une ressource externe), `contenu_texte` est NULL.
+--   texte         → `contenu_texte` est obligatoire (message court affiché
+--                    plein écran), `url_fichier` est NULL.
+-- Ces invariants sont garantis par l'entité de domaine (App\Domain\Information\Entities\Media)
+-- pour avoir des messages d'erreur explicites côté API.
+CREATE TABLE MEDIA (
+    id             INT AUTO_INCREMENT PRIMARY KEY,
+    titre          VARCHAR(150) NOT NULL,
+    type           ENUM('image', 'video', 'texte') NOT NULL,
+    url_fichier    VARCHAR(255) NULL,
+    contenu_texte  TEXT NULL,
+    duree_sec      INT,
+    actif          BOOLEAN NOT NULL DEFAULT TRUE,
+    date_ajout     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- Table : PLAYLIST
+CREATE TABLE PLAYLIST (
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    nom     VARCHAR(100) NOT NULL,
+    active  BOOLEAN NOT NULL DEFAULT FALSE
+) ENGINE=InnoDB;
+
+-- Table d'association : PLAYLIST_MEDIA
+CREATE TABLE PLAYLIST_MEDIA (
+    playlist_id  INT NOT NULL,
+    media_id     INT NOT NULL,
+    ordre        INT NOT NULL,
+    PRIMARY KEY (playlist_id, media_id),
+    CONSTRAINT fk_pm_playlist
+        FOREIGN KEY (playlist_id) REFERENCES PLAYLIST(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_pm_media
+        FOREIGN KEY (media_id) REFERENCES MEDIA(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- Index
+CREATE INDEX idx_media_actif      ON MEDIA(actif);
+CREATE INDEX idx_playlist_active  ON PLAYLIST(active);

@@ -1,0 +1,59 @@
+-- =====================================================
+-- BASE DE DONNÉES : Module Agenda (réservations)
+-- SGBD : MySQL
+-- =====================================================
+
+CREATE DATABASE IF NOT EXISTS bts_aero_agenda
+    DEFAULT CHARACTER SET utf8mb4
+    DEFAULT COLLATE utf8mb4_unicode_ci;
+
+USE bts_aero_agenda;
+
+-- Table : PROFESSEUR
+CREATE TABLE PROFESSEUR (
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    nom     VARCHAR(50) NOT NULL,
+    prenom  VARCHAR(50) NOT NULL
+) ENGINE=InnoDB;
+
+-- Table : CLASSE
+CREATE TABLE CLASSE (
+    id   INT AUTO_INCREMENT PRIMARY KEY,
+    nom  VARCHAR(50) NOT NULL
+) ENGINE=InnoDB;
+
+-- Table : MACHINE
+CREATE TABLE MACHINE (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    nom         VARCHAR(100) NOT NULL,
+    type        VARCHAR(50) NOT NULL,
+    disponible  BOOLEAN NOT NULL DEFAULT TRUE
+) ENGINE=InnoDB;
+
+-- Table : RESERVATION
+-- Plusieurs professeurs peuvent réserver la même machine sur le même créneau ;
+-- le champ `description` précise la partie de la machine concernée.
+CREATE TABLE RESERVATION (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    debut           DATETIME NOT NULL,
+    fin             DATETIME NOT NULL,
+    description     VARCHAR(500) NULL,
+    professeur_id   INT NOT NULL,
+    classe_id       INT NOT NULL,
+    machine_id      INT NOT NULL,
+    CONSTRAINT fk_resa_prof
+        FOREIGN KEY (professeur_id) REFERENCES PROFESSEUR(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_resa_classe
+        FOREIGN KEY (classe_id) REFERENCES CLASSE(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_resa_machine
+        FOREIGN KEY (machine_id) REFERENCES MACHINE(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT chk_resa_dates
+        CHECK (fin > debut)
+) ENGINE=InnoDB;
+
+-- Index
+CREATE INDEX idx_resa_dates    ON RESERVATION(debut, fin);
+CREATE INDEX idx_resa_machine  ON RESERVATION(machine_id, debut, fin);

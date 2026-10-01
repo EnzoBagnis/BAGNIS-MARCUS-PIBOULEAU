@@ -1,0 +1,20 @@
+/* Page Information : le MediaRotation occupe TOUT l'espace écran
+   et gère la rotation automatique des médias (issue #50). */
+
+.ecran-page.ecran-info {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  /* Le fond suit le thème sélectionné (clair / sombre / teinté). */
+  background: var(--color-bg);
+}
+
+.ecran-info > .media-player {
+  flex: 1;
+}

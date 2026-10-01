@@ -1,0 +1,77 @@
+/* ============================================================================
+   placeholder.css — cartes d'accueil prof / admin (espaces transitoires)
+   ============================================================================ */
+
+.placeholder-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: var(--gradient-hero);
+}
+
+.placeholder-card {
+  width: min(540px, 100%);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-10) var(--space-8);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.placeholder-card__badge {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+}
+.placeholder-card__badge--prof {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-soft-text);
+  border: 1px solid var(--color-primary);
+}
+.placeholder-card__badge--admin {
+  background: var(--color-success-soft);
+  color: var(--color-success-soft-text);
+  border: 1px solid var(--color-success);
+}
+
+.placeholder-card h1 {
+  margin: 0 0 var(--space-3);
+  font-size: 1.6rem;
+}
+
+.placeholder-card p {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.placeholder-card__hint strong {
+  color: var(--color-heading);
+}
+
+.placeholder-card__logout {
+  margin-top: var(--space-3);
+  padding: 0.55rem 1.1rem;
+  background: var(--color-secondary);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-on-secondary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+    background var(--transition-fast);
+}
+.placeholder-card__logout:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-surface-hover);
+}

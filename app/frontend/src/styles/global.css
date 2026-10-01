@@ -1,0 +1,126 @@
+/* ============================================================================
+   global.css — base transverse de l'application
+   Les couleurs / rayons / ombres proviennent de styles/themes.css (tokens).
+   ============================================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Hiérarchie typographique de base */
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-heading);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+/* Focus clavier visible et cohérent sur tous les éléments interactifs. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ── Mode kiosque : masquage du curseur ─────────────────────── */
+html.kiosk-cursor-hidden,
+html.kiosk-cursor-hidden * {
+  cursor: none !important;
+}
+
+.ecran-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.ecran-page {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-8);
+  overflow: auto;
+}
+
+/* Page 404 / écrans de repli textuels */
+.ecran-404 {
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--color-text);
+}
+
+.ecran-404 a {
+  color: var(--color-primary);
+}
+
+/* ── Placeholders d'espace (prof / admin) ───────────────────── */
+.login-placeholder {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-8) var(--space-8);
+}
+
+.login-placeholder h1 {
+  margin: 0 0 var(--space-2);
+  font-size: 2.5rem;
+}
+
+.login-placeholder__hint {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-10);
+}
+
+.login-placeholder__kiosk {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-6);
+}
+
+.login-placeholder__kiosk h2 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-3);
+}
+
+.login-placeholder__kiosk ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.login-placeholder__kiosk a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.login-placeholder__kiosk a:hover {
+  text-decoration: underline;
+}

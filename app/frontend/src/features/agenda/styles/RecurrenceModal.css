@@ -1,0 +1,219 @@
+/* ============================================================================
+   RecurrenceModal.css — fenêtre de réservation récurrente (façon Agenda Samsung)
+   Réutilise les classes de modale d'AgendaPage (.modal-overlay, .modal-card…)
+   et les tokens de thème (themes.css). Couleurs pilotées par variables CSS.
+   ============================================================================ */
+
+/* Carte plus large que les modales simples (beaucoup d'options) + défilement
+   interne si le contenu dépasse la hauteur de l'écran. */
+.rec-card {
+  width: min(520px, 100%);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.rec-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  overflow-y: auto;
+  padding-right: var(--space-2);
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+.rec-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.rec-section__label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.rec-hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Sélecteur de fréquence segmenté ───────────────────────── */
+.rec-segment {
+  display: flex;
+  gap: var(--space-1);
+  background-color: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 4px;
+}
+
+.rec-segment__btn {
+  flex: 1;
+  padding: 0.5rem 0.5rem;
+  border: none;
+  border-radius: calc(var(--radius-md) - 3px);
+  background-color: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.rec-segment__btn:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.rec-segment__btn.is-active {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* ── Lignes « tous les N … » ───────────────────────────────── */
+.rec-inline {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: 0.92rem;
+  color: var(--color-text);
+}
+
+.rec-number {
+  width: 4.5rem;
+  text-align: center;
+}
+
+.rec-date-input {
+  width: auto;
+}
+
+/* ── Sélecteur de jours (L M M J V) ────────────────────────── */
+.rec-weekdays {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.rec-day {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.rec-day:hover {
+  border-color: var(--color-primary);
+}
+
+.rec-day.is-active {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
+}
+
+/* ── Groupes de boutons radio ──────────────────────────────── */
+.rec-radios {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.rec-radio {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.92rem;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.rec-radio input[type='radio'] {
+  flex: 0 0 auto;
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+/* ── Dates précises (mode mensuel personnalisé) ────────────── */
+.rec-dates {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.rec-add {
+  padding: 0.5rem 0.9rem;
+}
+
+.rec-date-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.rec-date-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.3rem 0.3rem 0.3rem 0.7rem;
+  background-color: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill, 999px);
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+.rec-date-chip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.rec-date-chip button:hover {
+  background-color: var(--color-danger, #dc3545);
+  color: var(--color-on-primary, #fff);
+}
+
+/* ── Champ déplié sous une option (compteur / date de fin) ──── */
+.rec-suboption {
+  margin-left: 1.65rem; /* aligné sous le libellé du bouton radio */
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface-2);
+  border-radius: var(--radius-md);
+}
+
+/* ── Mobile ────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .rec-card {
+    max-height: 92vh;
+  }
+  .rec-day {
+    width: 2.3rem;
+    height: 2.3rem;
+  }
+}

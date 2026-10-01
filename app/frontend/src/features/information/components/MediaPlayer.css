@@ -1,0 +1,147 @@
+/* ============================================================================
+   MediaPlayer — composant générique plein écran (image / vidéo / texte)
+   ----------------------------------------------------------------------------
+   Module TV en mode kiosque : la priorité absolue est la lisibilité à distance
+   et le contraste. Les images / vidéos restent sur fond noir neutre (idéal quel
+   que soit le visuel) ; seul l'accent (spinner, filet du texte) suit le thème.
+   ============================================================================ */
+
+.media-player {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image & vidéo : occupent tout l'écran */
+.media-player__image,
+.media-player__video {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Mode « contain » : on préserve le ratio SANS dépendre d'`object-fit`.
+   Beaucoup de navigateurs Smart TV (Vidaa Hisense, Tizen / WebOS anciens)
+   ignorent en effet `object-fit` sur les <video> et étirent la vidéo pour
+   remplir la boîte 100 %×100 % → une vidéo portrait devenait « ultra-wide ».
+   En dimensionnant l'élément lui-même (max 100 %, le reste en auto), le ratio
+   intrinsèque est respecté partout ; le conteneur flex (.media-player) se charge
+   du centrage. */
+.media-player--contain .media-player__image,
+.media-player--contain .media-player__video {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* navigateurs récents : ceinture + bretelles */
+}
+
+/* Filet de sécurité pour le navigateur Vidaa (Hisense) qui applique
+   `max-width`/`max-height` indépendamment, sans préserver le ratio, et étire
+   donc la vidéo. On ne contraint alors QU'UN seul axe (celui qui déborde),
+   l'autre reste en `auto` → le ratio intrinsèque est forcément respecté.
+   L'orientation est calculée en JS au chargement des métadonnées de la vidéo. */
+.media-player--contain .media-player__video--landscape {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.media-player--contain .media-player__video--portrait {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.media-player--cover .media-player__image,
+.media-player--cover .media-player__video {
+  object-fit: cover;
+}
+
+/* ------------------------------------------------------------
+   Texte plein écran — gros, contrasté, lisible à plusieurs mètres
+   ------------------------------------------------------------ */
+.media-player__text {
+  width: 100%;
+  height: 100%;
+  padding: 6vh 8vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* Texte plein écran : suit le thème (clair = noir sur blanc, sombre = inverse). */
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.media-player__text-title {
+  font-size: clamp(2rem, 5vw, 5rem);
+  font-weight: 700;
+  margin: 0 0 4vh;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.media-player__text-body {
+  font-size: clamp(1.5rem, 4vw, 4rem);
+  line-height: 1.4;
+  max-width: 90%;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   États transverses : loading & error
+   ------------------------------------------------------------ */
+.media-player__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  background: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  text-align: center;
+  padding: var(--space-8);
+}
+
+.media-player__overlay--error {
+  background: #2a0f0f;
+}
+
+.media-player__overlay h2 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  color: #ffffff;
+}
+
+.media-player__overlay p {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  margin: 0;
+  color: #d6dee8;
+}
+
+.media-player__spinner {
+  width: 64px;
+  height: 64px;
+  border: 6px solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: media-player-spin 0.9s linear infinite;
+}
+
+@keyframes media-player-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

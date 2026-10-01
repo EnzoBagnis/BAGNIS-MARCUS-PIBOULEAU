@@ -1,0 +1,544 @@
+/* ==========================================================================
+   AgendaPage.css — tableau de bord du planning (réservation machines)
+   Couleurs / rayons / ombres pilotés par les tokens de thème (themes.css).
+   ========================================================================== */
+
+/* ── Disposition globale (le dashboard) ─────────────────────── */
+.agenda-dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: var(--color-bg-subtle);
+    overflow: hidden;
+    color: var(--color-text);
+}
+
+/* Corps : sidebar machines + calendrier, sous l'en-tête plein largeur. */
+.dashboard-body {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ── Barre latérale (sidebar machines, mode prof) ───────────── */
+.dashboard-sidebar {
+    width: 300px;
+    background-color: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    color: var(--color-text);
+    overflow: hidden;
+}
+
+.dashboard-sidebar h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--color-heading);
+}
+
+/* Liste des machines : prend la hauteur restante et défile si nécessaire */
+.machine-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin-right: -8px;
+    padding-right: 8px;
+}
+
+/* ── Contenu principal (à droite) ───────────────────────────── */
+.dashboard-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ── En-tête : barre pleine largeur en haut ─────────────────── */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    background-color: var(--color-surface);
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--color-heading);
+}
+
+.text-muted {
+    color: var(--color-text-muted);
+    margin-top: var(--space-1);
+    font-size: 0.9rem;
+}
+
+.user-disconnect {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.user-disconnect__label {
+    color: var(--color-heading);
+    font-weight: 600;
+}
+
+.btn-disconnect {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.6rem 1rem;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.btn-disconnect:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.btn-disconnect__icon {
+    display: block;
+    flex: 0 0 auto;
+}
+
+/* ── Zone du calendrier (conteneur) ─────────────────────────── */
+.dashboard-calendar-wrapper {
+    flex: 1;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    min-height: 0;
+}
+
+/* Bouton générique (écran d'erreur « Réessayer », confirmations modales) */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.6rem 1rem;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+/* Variante largeur auto (par défaut .btn-primary occupe 100 % dans l'admin).
+   Double classe pour primer sur .btn-primary quel que soit l'ordre des CSS. */
+.btn-primary.btn-primary--auto {
+    width: auto;
+}
+
+/* ── États plein écran (chargement / erreur) ────────────────── */
+.agenda-state {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--space-4);
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+}
+
+.agenda-state--error {
+    color: var(--color-danger);
+}
+
+/* ── Machines glissables (sidebar prof) ─────────────────────── */
+.machine-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    margin-bottom: var(--space-3);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    cursor: grab;
+    font-weight: 600;
+    color: var(--color-text);
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition-fast),
+        box-shadow var(--transition-fast), transform var(--transition-fast);
+    /* Indispensable au glisser tactile : sans ça le navigateur interprète le
+       toucher comme un défilement et le drag ne démarre jamais sur mobile. */
+    touch-action: none;
+}
+
+/* Pastille de couleur d'identité de la machine (légende = même teinte que ses
+   réservations dans l'agenda). Indicateur fonctionnel, pas un liseré décoratif. */
+.machine-chip__swatch {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.machine-chip:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.machine-chip:active {
+    cursor: grabbing;
+}
+
+/* ============================================================================
+   MODALES (création & lecture d'une réservation)
+   ============================================================================ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(8, 11, 18, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    cursor: pointer;
+}
+
+.modal-card {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    width: min(420px, 100%);
+    box-shadow: var(--shadow-lg);
+    cursor: default;
+}
+
+.modal-card__title {
+    margin: 0 0 var(--space-2) 0;
+    font-size: 1.25rem;
+    color: var(--color-heading);
+}
+
+.modal-card__subtitle {
+    margin: 0 0 var(--space-5) 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.modal-field label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+.modal-control {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-strong);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    outline: none;
+    transition: border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.modal-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+.modal-control--textarea {
+    resize: vertical;
+    min-height: 72px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+}
+
+/* Modale de création : le bouton « Répéter » à gauche, Annuler/Confirmer à droite,
+   tout en bas de la modale. */
+.modal-actions--split {
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.modal-actions__main {
+    display: flex;
+    gap: var(--space-3);
+    margin-left: auto;
+}
+
+/* Bouton « Répéter » : variante douce de l'accent (même teinte que « Confirmer »
+   mais aplat clair), pour se distinguer du bouton primaire plein sans jurer. */
+.btn-repeat {
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary-soft-text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.btn-repeat:hover {
+    background-color: var(--color-surface-hover);
+}
+
+/* Bouton « fantôme » (Annuler) */
+.btn-ghost {
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-strong);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.btn-ghost:hover {
+    background-color: var(--color-surface-hover);
+    border-color: var(--color-border-strong);
+}
+
+/* Bouton « Modifier » (modale détails) */
+.btn-edit {
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-warning, #e0a800);
+    background-color: transparent;
+    color: var(--color-warning, #e0a800);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.btn-edit:hover {
+    background-color: var(--color-warning, #e0a800);
+    color: var(--color-on-primary, #fff);
+    border-color: var(--color-warning, #e0a800);
+}
+
+/* Bouton « Supprimer » (modale détails) */
+.btn-danger {
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-danger, #dc3545);
+    background-color: transparent;
+    color: var(--color-danger, #dc3545);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.btn-danger:hover {
+    background-color: var(--color-danger, #dc3545);
+    color: var(--color-on-primary, #fff);
+    border-color: var(--color-danger, #dc3545);
+}
+
+/* Détails de réservation (modale lecture) */
+.modal-details {
+    margin-bottom: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    color: var(--color-text);
+}
+
+.modal-details p {
+    margin: 0;
+}
+
+.modal-details strong {
+    color: var(--color-heading);
+}
+
+.modal-description-box {
+    margin-top: var(--space-2);
+    padding: var(--space-3);
+    background-color: var(--color-surface-2);
+    border-radius: var(--radius-md);
+}
+
+.modal-description-box strong {
+    display: block;
+    margin-bottom: var(--space-1);
+}
+
+.modal-description-box__empty {
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+/* ============================================================================
+   RESPONSIVE — réservation / agenda (PC, tablette, mobile)
+   Les modules TV (/ecran/*) tournent en grand écran : non concernés.
+   ============================================================================ */
+
+/* ── Tablette : corps en colonne (machines au-dessus du calendrier) ──────── */
+@media (max-width: 900px) {
+    .agenda-dashboard {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+    }
+    .dashboard-body {
+        flex-direction: column;
+        overflow: visible;
+    }
+    .dashboard-sidebar {
+        width: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+    }
+    /* Machines en bande horizontale compacte et défilable. */
+    .machine-list {
+        display: flex;
+        flex-direction: row;
+        gap: var(--space-2);
+        overflow-x: auto;
+        overflow-y: hidden;
+        margin-right: 0;
+        padding-right: 0;
+        padding-bottom: var(--space-2);
+    }
+    .machine-chip {
+        margin-bottom: 0;
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+    .dashboard-main {
+        overflow: visible;
+        padding: var(--space-5);
+    }
+    .dashboard-calendar-wrapper {
+        min-height: 70vh;
+    }
+}
+
+/* ── Mobile : en-tête minimal (juste un bouton déconnexion) ──────────────── */
+@media (max-width: 600px) {
+    /* En-tête compact : on masque le titre, on ne garde que le bouton
+       de déconnexion et le sélecteur de styles alignés à droite. */
+    .dashboard-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-3);
+    }
+    /* Titre « Planning du Hall Aéronautique » : masqué sur téléphone. */
+    .dashboard-header__title {
+        display: none;
+    }
+    .user-disconnect {
+        width: auto;
+    }
+    /* Libellé « Espace Professeur » masqué : le contexte est évident. */
+    .user-disconnect__label {
+        display: none;
+    }
+    /* Bouton déconnexion réduit à son icône (compact). */
+    .btn-disconnect {
+        padding: 0.45rem 0.6rem;
+    }
+    .btn-disconnect__text {
+        display: none;
+    }
+    /* L'agenda remplit toute la hauteur de l'écran : en-tête + bande machines
+       compacts en haut, le calendrier occupe tout le reste (défilement interne
+       des heures), sans scroll de page. */
+    .agenda-dashboard {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+    .dashboard-body {
+        min-height: 0;
+        overflow: hidden;
+    }
+    .dashboard-main {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        padding: var(--space-2);
+    }
+    /* Bande machines : hauteur au plus juste pour laisser la place au calendrier. */
+    .dashboard-sidebar {
+        flex: 0 0 auto;
+        padding: var(--space-2);
+    }
+    /* Le titre « Machines » et la consigne « Glissez une machine… » sont
+       masqués : la bande ne contient plus que les pastilles. */
+    .dashboard-sidebar h2,
+    .dashboard-sidebar__hint {
+        display: none;
+    }
+    /* Le calendrier occupe tout l'espace restant, sans cadre ni padding
+       superflus, pour maximiser l'espace utile (façon Google Agenda mobile). */
+    .dashboard-calendar-wrapper {
+        flex: 1;
+        min-height: 0;
+        padding: 0;
+        border-radius: 0;
+        background-color: transparent;
+    }
+    .modal-card {
+        padding: var(--space-5);
+    }
+    .modal-actions {
+        flex-wrap: wrap;
+    }
+}

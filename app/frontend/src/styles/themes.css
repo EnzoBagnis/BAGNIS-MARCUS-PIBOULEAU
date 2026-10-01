@@ -1,0 +1,304 @@
+/* ============================================================================
+   themes.css — Système de design centralisé (portail BTS AERO / LPMF)
+   ----------------------------------------------------------------------------
+   Toute la charte visuelle de l'application vit ici sous forme de variables
+   CSS natives. Trois thèmes complets sont proposés et commutables en temps
+   réel via l'attribut `data-theme` posé sur <html> (voir ThemeSwitcher) :
+
+     data-theme="epure"    → minimaliste (blancs, accent anthracite)
+     data-theme="moderne"  → SaaS contemporain (accent indigo, ombres douces)
+     data-theme="colore"   → vif mais professionnel (bleu + vert + orange)
+
+   Les tokens NON colorimétriques (typographie, espacements, transitions) sont
+   communs aux trois thèmes ; seuls la palette, les rayons et les ombres varient.
+
+   Convention de nommage des tokens :
+     --color-*     couleurs (surfaces, texte, accents, états)
+     --space-*     échelle d'espacement (multiples de 4 px)
+     --radius-*    rayons d'arrondi
+     --shadow-*    élévations
+     --font-*      familles typographiques
+   ============================================================================ */
+
+/* ----------------------------------------------------------------------------
+   1. Tokens communs aux trois thèmes
+   ---------------------------------------------------------------------------- */
+:root {
+  /* Typographie — sans serif système (lisible, sans dépendance réseau) */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-display: var(--font-sans);
+
+  /* Échelle d'espacement (base 4 px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+
+  /* Rayon « pilule » (commun) */
+  --radius-full: 999px;
+}
+
+/* ----------------------------------------------------------------------------
+   2. Thème 1 — ÉPURÉ (défaut)
+   Minimalisme façon Notion / Apple : blancs, séparations par bordures fines,
+   un seul accent anthracite, ombres quasi absentes.
+   ---------------------------------------------------------------------------- */
+:root,
+[data-theme="epure"] {
+  /* Surfaces */
+  --color-bg: #ffffff;
+  --color-bg-subtle: #fafafa;
+  --color-surface: #ffffff;
+  --color-surface-2: #f6f6f7;
+  --color-surface-hover: #f1f1f3;
+  --color-border: #e8e8ea;
+  --color-border-strong: #d6d6da;
+
+  /* Texte */
+  --color-heading: #18181b;
+  --color-text: #27272a;
+  --color-text-muted: #71717a;
+
+  /* Accent principal (anthracite) */
+  --color-primary: #1f2024;
+  --color-primary-hover: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-soft: #f1f1f3;
+  --color-primary-soft-text: #27272a;
+
+  /* Bouton secondaire */
+  --color-secondary: #ffffff;
+  --color-secondary-hover: #f1f1f3;
+  --color-on-secondary: #27272a;
+
+  /* États sémantiques */
+  --color-danger: #b91c1c;
+  --color-danger-hover: #991b1b;
+  --color-danger-soft: #fef2f2;
+  --color-danger-soft-text: #991b1b;
+  --color-success: #15803d;
+  --color-success-soft: #f0fdf4;
+  --color-success-soft-text: #15803d;
+  --color-warning: #b45309;
+
+  /* Accents de catégorisation (le thème épuré reste monochrome) */
+  --color-accent-2: #1f2024;
+  --color-accent-3: #1f2024;
+
+  /* Focus clavier (WCAG) */
+  --color-focus: rgba(31, 32, 36, 0.35);
+
+  /* Réservation calendrier */
+  --event-bg: #f4f4f5;
+  --event-border: #1f2024;
+  --event-text: #18181b;
+
+  /* Rayons (épuré = arrondis discrets) */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  /* Ombres (quasi inexistantes : la profondeur passe par les bordures) */
+  --shadow-sm: none;
+  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  /* Fond « héros » des pages plein écran centrées (login, sélecteur d'écran) */
+  --gradient-hero: var(--color-bg-subtle);
+}
+
+/* ----------------------------------------------------------------------------
+   3. Thème 2 — MODERNE (sombre)
+   Inspiration Vercel / Linear : interface SOMBRE, accent indigo lumineux,
+   surfaces ardoise, coins franchement arrondis, ombres profondes (sans glow),
+   micro-interactions. Le mode sombre crée le contraste fort avec les deux
+   autres thèmes (clairs).
+   ---------------------------------------------------------------------------- */
+[data-theme="moderne"] {
+  /* Surfaces (ardoise profonde) */
+  --color-bg: #0b0e14;
+  --color-bg-subtle: #0e121b;
+  --color-surface: #151a23;
+  --color-surface-2: #1b212c;
+  --color-surface-hover: #232a37;
+  --color-border: #28303d;
+  --color-border-strong: #38414f;
+
+  /* Texte */
+  --color-heading: #f4f6fb;
+  --color-text: #d3dae6;
+  --color-text-muted: #8b93a7;
+
+  /* Accent principal (indigo lumineux, lisible sur fond sombre) */
+  --color-primary: #6f74f5;
+  --color-primary-hover: #868bff;
+  --color-on-primary: #ffffff;
+  --color-primary-soft: #1e2138;
+  --color-primary-soft-text: #b9bcff;
+
+  /* Bouton secondaire */
+  --color-secondary: #1b212c;
+  --color-secondary-hover: #232a37;
+  --color-on-secondary: #d3dae6;
+
+  /* États sémantiques */
+  --color-danger: #f43f5e;
+  --color-danger-hover: #fb7185;
+  --color-danger-soft: #2a1620;
+  --color-danger-soft-text: #fda4af;
+  --color-success: #34d399;
+  --color-success-soft: #11251e;
+  --color-success-soft-text: #6ee7b7;
+  --color-warning: #fbbf24;
+
+  /* Accents de catégorisation */
+  --color-accent-2: #38bdf8;
+  --color-accent-3: #a78bfa;
+
+  /* Focus clavier */
+  --color-focus: rgba(111, 116, 245, 0.55);
+
+  /* Réservation calendrier */
+  --event-bg: #20243d;
+  --event-border: #6f74f5;
+  --event-text: #c7caff;
+
+  /* Rayons (moderne = bien arrondi) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Ombres profondes (sombre) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.6);
+
+  /* Fond « héros » : halo indigo discret sur l'ardoise */
+  --gradient-hero: radial-gradient(
+    1100px 560px at 50% -15%,
+    #1c2142 0%,
+    var(--color-bg) 60%
+  );
+}
+
+/* ----------------------------------------------------------------------------
+   4. Thème 3 — COLORÉ
+   Vif mais professionnel (contexte éducatif) : palette bleu + vert + orange
+   utilisée pour catégoriser (badges de type, états), jamais décorative.
+   ---------------------------------------------------------------------------- */
+[data-theme="colore"] {
+  /* Surfaces (teinte bleutée franche pour faire chanter les accents) */
+  --color-bg: #eaf1fb;
+  --color-bg-subtle: #dfeaf8;
+  --color-surface: #ffffff;
+  --color-surface-2: #eaf2fd;
+  --color-surface-hover: #ddebfb;
+  --color-border: #cfddef;
+  --color-border-strong: #b3caea;
+
+  /* Texte */
+  --color-heading: #0c2c4e;
+  --color-text: #1d3c5c;
+  --color-text-muted: #5a7794;
+
+  /* Accent principal (bleu « Avion ») */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-on-primary: #ffffff;
+  --color-primary-soft: #e3eefe;
+  --color-primary-soft-text: #1d4ed8;
+
+  /* Bouton secondaire */
+  --color-secondary: #ffffff;
+  --color-secondary-hover: #e3eef9;
+  --color-on-secondary: #1f3a55;
+
+  /* États sémantiques */
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-soft: #fef2f2;
+  --color-danger-soft-text: #b91c1c;
+  --color-success: #16a34a;
+  --color-success-soft: #ecfdf3;
+  --color-success-soft-text: #15803d;
+  --color-warning: #ea580c;
+
+  /* Accents de catégorisation : vert (ex. « Hélicoptère »), orange (ex. « Drone ») */
+  --color-accent-2: #16a34a;
+  --color-accent-3: #ea580c;
+
+  /* Focus clavier */
+  --color-focus: rgba(37, 99, 235, 0.45);
+
+  /* Réservation calendrier */
+  --event-bg: #e3eefe;
+  --event-border: #2563eb;
+  --event-text: #1d4ed8;
+
+  /* Rayons */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Ombres moyennes, légèrement teintées */
+  --shadow-sm: 0 1px 2px rgba(15, 41, 68, 0.07);
+  --shadow-md: 0 4px 14px rgba(15, 41, 68, 0.1);
+  --shadow-lg: 0 14px 36px rgba(15, 41, 68, 0.16);
+
+  /* Fond « héros » multi-accents subtil */
+  --gradient-hero: radial-gradient(
+    900px 500px at 15% -10%,
+    #e3eefe 0%,
+    rgba(255, 255, 255, 0) 45%
+  ),
+  radial-gradient(
+    900px 500px at 90% 0%,
+    #e6f7ee 0%,
+    rgba(255, 255, 255, 0) 45%
+  ),
+  var(--color-bg);
+}
+
+/* ============================================================================
+   5. Touches propres à chaque thème (personnalité au-delà des couleurs)
+   Les sélecteurs préfixés par [data-theme="…"] ont une spécificité supérieure
+   et priment donc sur le CSS des composants, quel que soit l'ordre de chargement.
+   ============================================================================ */
+
+/* ── MODERNE : dégradés subtils sur les boutons d'accent (profondeur SaaS) ── */
+[data-theme="moderne"] .btn-primary,
+[data-theme="moderne"] .login-form__submit,
+[data-theme="moderne"] .btn-disconnect {
+  background-image: linear-gradient(180deg, #7d82ff 0%, var(--color-primary) 100%);
+  border-color: transparent;
+}
+[data-theme="moderne"] .btn-primary:hover,
+[data-theme="moderne"] .login-form__submit:hover:not(:disabled),
+[data-theme="moderne"] .btn-disconnect:hover {
+  background-image: linear-gradient(180deg, #8e93ff 0%, var(--color-primary-hover) 100%);
+}
+
+/* ── COLORÉ : en-têtes de carte légèrement teintés (sans liseré décoratif) ── */
+[data-theme="colore"] .card-header {
+  background-color: var(--color-primary-soft);
+}
+
+/* ── ÉPURÉ : minimalisme assumé (aplats, pas de relief) ───────────────────── */
+[data-theme="epure"] .admin-card,
+[data-theme="epure"] .ecran-select__card,
+[data-theme="epure"] .login-card,
+[data-theme="epure"] .dashboard-header {
+  box-shadow: none;
+}
+

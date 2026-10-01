@@ -1,0 +1,106 @@
+@startuml schema_bdd
+' =====================================================
+'  Schéma des bases de données du projet LPMF / BTS AERO
+'  - bts_aero_information : module Affichage (médias / playlists)
+'  - bts_aero_agenda      : module Réservation des machines
+'
+'  Évolutions :
+'   - Plusieurs professeurs peuvent désormais réserver la même
+'     machine sur un même créneau.
+'   - Ajout du champ `description` (optionnel / NULLABLE) sur
+'     RESERVATION pour préciser la partie de la machine concernée.
+' =====================================================
+
+skinparam linetype ortho
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam class {
+    BackgroundColor #FDFDFD
+    BorderColor     #4F6D7A
+    ArrowColor      #4F6D7A
+    FontName        Segoe UI
+}
+hide circle
+hide methods
+
+' =====================================================
+' Base : bts_aero_information
+' =====================================================
+package "bts_aero_information" as DB_INFO #E8F1F8 {
+
+    entity "MEDIA" as MEDIA {
+        * id : INT <<PK, AI>>
+        --
+        * titre        : VARCHAR(150)
+        * type         : ENUM(image, video, texte)
+        * url_fichier  : VARCHAR(255)
+          duree_sec    : INT
+        * actif        : BOOLEAN  «default TRUE»
+        * date_ajout   : DATETIME «default CURRENT_TIMESTAMP»
+    }
+
+    entity "PLAYLIST" as PLAYLIST {
+        * id      : INT <<PK, AI>>
+        --
+        * nom     : VARCHAR(100)
+        * active  : BOOLEAN  «default FALSE»
+    }
+
+    entity "PLAYLIST_MEDIA" as PLAYLIST_MEDIA {
+        * playlist_id : INT <<PK, FK → PLAYLIST.id>>
+        * media_id    : INT <<PK, FK → MEDIA.id>>
+        --
+        * ordre       : INT
+    }
+
+    PLAYLIST       ||--o{ PLAYLIST_MEDIA : "1..*"
+    MEDIA          ||--o{ PLAYLIST_MEDIA : "1..*"
+}
+
+' =====================================================
+' Base : bts_aero_agenda
+' =====================================================
+package "bts_aero_agenda" as DB_AGENDA #FFF5E6 {
+
+    entity "PROFESSEUR" as PROFESSEUR {
+        * id     : INT <<PK, AI>>
+        --
+        * nom    : VARCHAR(50)
+        * prenom : VARCHAR(50)
+    }
+
+    entity "CLASSE" as CLASSE {
+        * id  : INT <<PK, AI>>
+        --
+        * nom : VARCHAR(50)
+    }
+
+    entity "MACHINE" as MACHINE {
+        * id         : INT <<PK, AI>>
+        --
+        * nom        : VARCHAR(100)
+        * type       : VARCHAR(50)
+        * disponible : BOOLEAN  «default TRUE»
+    }
+
+    entity "RESERVATION" as RESERVATION {
+        * id            : INT <<PK, AI>>
+        --
+        * debut         : DATETIME
+        * fin           : DATETIME
+          description   : VARCHAR(500)
+        * professeur_id : INT <<FK → PROFESSEUR.id>>
+        * classe_id     : INT <<FK → CLASSE.id>>
+        * machine_id    : INT <<FK → MACHINE.id>>
+        --
+        chk_resa_dates : fin > debut
+    }
+
+    PROFESSEUR ||--o{ RESERVATION : "réserve"
+    CLASSE     ||--o{ RESERVATION : "pour"
+    MACHINE    ||--o{ RESERVATION : "concerne"
+}
+
+
+
+@enduml

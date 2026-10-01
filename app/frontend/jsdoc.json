@@ -1,0 +1,18 @@
+{
+  "source": {
+    "include": ["src"],
+    "includePattern": ".+\\.(js|jsx)$",
+    "excludePattern": "(node_modules|dist|\\.test\\.)"
+  },
+  "plugins": ["jsdoc-plugin-typescript", "plugins/markdown"],
+  "opts": {
+    "destination": "../../docs/api/frontend",
+    "recurse": true,
+    "readme": "README.md",
+    "encoding": "utf8"
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  }
+}

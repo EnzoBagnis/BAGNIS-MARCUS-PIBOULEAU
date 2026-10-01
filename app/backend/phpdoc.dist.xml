@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor
+    configVersion="3"
+    xmlns="https://www.phpdoc.org"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://www.phpdoc.org/projects/phpdocumentor/files/phpdoc.xsd">
+
+    <title>API Backend — Portail BTS AERO</title>
+
+    <paths>
+        <output>../../docs/api/backend</output>
+        <cache>.phpdoc/cache</cache>
+    </paths>
+
+    <version number="1.0.0">
+        <api>
+            <source dsn=".">
+                <path>src</path>
+            </source>
+            <ignore>
+                <path>vendor/**/*</path>
+                <path>tests/**/*</path>
+            </ignore>
+            <visibility>public</visibility>
+        </api>
+    </version>
+</phpdocumentor>

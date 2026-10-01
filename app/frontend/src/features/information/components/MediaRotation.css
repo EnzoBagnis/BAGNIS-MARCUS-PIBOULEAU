@@ -1,0 +1,31 @@
+/* ============================================================
+   MediaRotation — transition de fondu enchaîné entre médias
+   ============================================================ */
+
+.media-rotation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.media-rotation__slide {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  transition: opacity 600ms ease-in-out;
+}
+
+.media-rotation__slide--fade-out {
+  opacity: 0;
+}
+
+/* Écran vide / fallback quand la playlist est vide */
+.media-rotation__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}

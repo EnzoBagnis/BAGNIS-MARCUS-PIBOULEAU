@@ -1,0 +1,82 @@
+# ============================================================
+# Environnement & secrets
+# ============================================================
+.env
+.env.local
+.env.*.local
+env
+
+# ============================================================
+# IDE / éditeurs
+# ============================================================
+.idea/
+.vscode/
+*.iml
+*.suo
+*.user
+
+# ============================================================
+# Claude Code (config locale par poste, ne pas versionner)
+# ============================================================
+.claude/
+
+# ============================================================
+# OS
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ============================================================
+# Logs
+# ============================================================
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================================
+# Backend PHP (Composer)
+# ============================================================
+app/backend/vendor/
+app/backend/composer.phar
+
+# ============================================================
+# Fichiers uploadés par les utilisateurs (images / vidéos)
+# On garde le dossier versionné via .gitkeep + .htaccess,
+# mais on ne versionne pas les médias eux-mêmes.
+# ============================================================
+app/backend/public/uploads/*
+!app/backend/public/uploads/.gitkeep
+!app/backend/public/uploads/.htaccess
+
+# ============================================================
+# Frontend (Vite / Node)
+# Note : les .gitignore locaux dans app/frontend/ et Maquette/
+# couvrent déjà node_modules et dist, on garde ici en filet
+# de sécurité pour tout autre projet Node éventuel.
+# ============================================================
+node_modules/
+dist/
+dist-ssr/
+.vite/
+.cache/
+*.local
+
+# ============================================================
+# Tests & couverture
+# ============================================================
+coverage/
+.nyc_output/
+.phpunit.result.cache
+
+# ============================================================
+# Documentation générée (API front JSDoc + back phpDocumentor)
+# Le HTML est régénérable depuis les configs versionnées
+# (app/frontend/jsdoc.json, app/backend/phpdoc.dist.xml).
+# ============================================================
+docs/api/
+app/backend/phpDocumentor.phar
+app/backend/.phpdoc/

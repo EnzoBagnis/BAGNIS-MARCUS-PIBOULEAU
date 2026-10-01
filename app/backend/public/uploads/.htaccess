@@ -1,0 +1,49 @@
+# ============================================================
+# Dossier d'uploads — protection contre l'exécution serveur-side.
+# ============================================================
+# Sans ces directives, un fichier `.php` (ou `.phar`, `.pl`, etc.)
+# uploadé pourrait être interprété par Apache → trou de sécurité
+# critique permettant l'exécution de code arbitraire.
+#
+# On bloque donc l'accès à tous les scripts exécutables connus,
+# on désactive le listing du dossier, et on force le téléchargement
+# (au lieu du rendu inline) pour les types ambigus (HTML, SVG).
+
+# 1) Bloquer toute extension exécutable côté serveur
+<FilesMatch "\.(php|php3|php4|php5|php7|php8|phps|phtml|phar|pl|py|cgi|sh|asp|aspx|jsp|jspx)$">
+    Require all denied
+</FilesMatch>
+
+# 2) Couper le moteur PHP au cas où l'host autorise quand même
+#    l'exécution selon des règles ailleurs. Apparenté à une ceinture
+#    en plus des bretelles ci-dessus.
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# 3) Pas de listing du dossier (un crawler ne doit pas voir tout l'historique)
+Options -Indexes
+
+# 4) Forcer le téléchargement des types HTML/SVG/XML
+#    (un SVG peut embarquer du JS, un HTML uploadé peut faire du XSS si servi inline)
+<IfModule mod_headers.c>
+    <FilesMatch "\.(htm|html|xhtml|svg|svgz|xml|xhtml\+xml)$">
+        Header set Content-Disposition "attachment"
+        Header set Content-Type "application/octet-stream"
+    </FilesMatch>
+</IfModule>
+
+# 5) MIME explicites pour les types attendus (sécurité défense-en-profondeur)
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png  .png
+    AddType image/webp .webp
+    AddType image/gif  .gif
+    AddType video/mp4  .mp4
+</IfModule>

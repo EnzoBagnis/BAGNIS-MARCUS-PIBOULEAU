@@ -1,0 +1,1119 @@
+/* ============================================================================
+   admin.css — Panneau d'administration (médias, playlists, entités)
+   ----------------------------------------------------------------------------
+   Usage PC / tablette : design dense et navigable. Les variables locales
+   --admin-* sont dérivées des tokens globaux (themes.css) afin que le panneau
+   suive le thème sélectionné.
+   ============================================================================ */
+.admin-panel-container {
+    --admin-bg-color: var(--color-bg-subtle);
+    --admin-card-bg: var(--color-surface);
+    --admin-text-main: var(--color-text);
+    --admin-text-muted: var(--color-text-muted);
+    --admin-border-color: var(--color-border);
+    --admin-primary: var(--color-primary);
+    --admin-primary-hover: var(--color-primary-hover);
+    --admin-secondary: var(--color-text-muted);
+    --admin-secondary-hover: var(--color-heading);
+    --admin-radius: var(--radius-md);
+    --admin-shadow: var(--shadow-md);
+
+    padding: 0;
+    background-color: var(--admin-bg-color);
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    color: var(--admin-text-main);
+}
+
+/* ============================================================================
+   COQUILLE DASHBOARD — structure unique, réagencée par thème
+   ----------------------------------------------------------------------------
+   Une seule structure HTML (nav + topbar + contenu) ; les zones sont placées
+   via grid-template-areas, redéfinies pour chaque thème plus bas. Disposition
+   par défaut : empilée (topbar / nav / contenu).
+   ============================================================================ */
+.admin-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "topbar"
+        "nav"
+        "content";
+    min-height: 100vh;
+}
+
+.admin-nav {
+    grid-area: nav;
+    padding: var(--space-5) var(--space-6);
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.admin-nav__brand {
+    margin-bottom: var(--space-5);
+}
+
+.admin-nav__brand-main {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-heading);
+    letter-spacing: 0.02em;
+}
+
+.admin-nav__brand-sub {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+}
+
+.admin-nav__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.admin-nav__link {
+    display: block;
+    padding: 0.55rem 0.85rem;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.admin-nav__link:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text);
+}
+
+/* ── Topbar ─────────────────────────────────────────────────── */
+.admin-topbar {
+    grid-area: topbar;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-6);
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.admin-topbar__title h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--color-heading);
+}
+
+.admin-topbar__title p {
+    margin: 0.2rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.admin-topbar__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-shrink: 0;
+}
+
+.admin-role {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.admin-role strong {
+    color: var(--color-heading);
+    text-transform: capitalize;
+}
+
+.admin-logout {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--transition-fast),
+        color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.admin-logout:hover {
+    border-color: var(--color-danger);
+    color: var(--color-danger);
+    background-color: var(--color-danger-soft);
+}
+
+/* ── Zone de contenu + grille de sections ───────────────────── */
+.admin-content {
+    grid-area: content;
+    padding: var(--space-8);
+    /* Colonne 1fr du shell : sans min-width:0 elle s'élargit avec son contenu
+       (long texte média) et fait déborder toute la page horizontalement. */
+    min-width: 0;
+}
+
+/* Les trois bulles (Stockage, Agenda, Médias & Playlists) s'empilent en
+   colonne unique ; chaque bulle gère sa propre disposition interne. */
+.admin-grid-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.admin-grid-item {
+    min-width: 0;
+    /* Décalage d'ancrage : la topbar collante ne doit pas masquer la section visée. */
+    scroll-margin-top: 96px;
+}
+
+/* ── Bulle « groupe » (sous-sections regroupées, ex. Agenda) ─────────────── */
+.admin-group__subtitle {
+    margin: 0.2rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.admin-group__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-6) var(--space-8);
+    /* Colonnes de même hauteur : la sous-section la plus courte (Classes) s'étire
+       pour s'aligner sur Professeurs / Machines. */
+    align-items: stretch;
+}
+
+/* Chaîne flex pour que la boîte de recherche absorbe la hauteur restante
+   et que les trois sous-sections aient exactement la même hauteur. */
+.admin-group .admin-card {
+    display: flex;
+    flex-direction: column;
+}
+.admin-group .admin-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.admin-group .admin-list-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.admin-group .search-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.admin-group .search-box__scroll {
+    flex: 1 1 220px;
+    max-height: none;
+}
+
+/* Aligne les boutons « Ajouter … » des trois sous-sections : on donne aux
+   formulaires une hauteur minimale commune (≈ un formulaire à 2 champs) et on
+   pousse le bouton en bas. Le formulaire « Classes » (1 champ) garde donc un
+   peu de blanc au-dessus de son bouton, mais celui-ci reste à la même hauteur. */
+.admin-group .admin-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 212px;
+}
+.admin-group .admin-form .form-actions {
+    margin-top: auto;
+}
+
+/* Les sous-sections ne sont plus des cartes autonomes : on aplatit leur
+   habillage pour qu'elles se lisent comme des blocs d'une même bulle. */
+.admin-group .admin-card {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+    overflow: visible;
+}
+
+.admin-group .admin-card .card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0 0 var(--space-3) 0;
+}
+
+.admin-group .admin-card .card-header h2 {
+    font-size: 1.05rem;
+}
+
+.admin-group .admin-card .card-body {
+    padding: var(--space-4) 0 0 0;
+}
+
+/* ============================================================================
+   ORGANISATION — toujours « Moderne » (sidebar latérale, dashboard SaaS)
+   ----------------------------------------------------------------------------
+   La disposition du panneau admin est désormais figée sur l'agencement
+   « Moderne », INDÉPENDAMMENT des couleurs : le sélecteur de couleurs
+   (Épuré · Moderne · Coloré) ne change que la palette via les tokens, pas la
+   structure. Ces règles ne sont donc plus conditionnées par [data-theme].
+   ============================================================================ */
+.admin-shell {
+    grid-template-columns: 248px 1fr;
+    grid-template-areas:
+        "nav topbar"
+        "nav content";
+}
+.admin-nav {
+    grid-area: nav;
+    border-right: 1px solid var(--color-border);
+    border-bottom: none;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+}
+.admin-nav__links {
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+.admin-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+/* ── Cartes ──────────────────────────────────────────────────── */
+.admin-card {
+    background-color: var(--admin-card-bg);
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--admin-shadow);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: var(--color-surface-2);
+    border-bottom: 1px solid var(--admin-border-color);
+    padding: 1.25rem 1.5rem;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--color-heading);
+}
+
+.card-body {
+    padding: var(--space-6);
+}
+
+/* ── Formulaires ─────────────────────────────────────────────── */
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.form-group input[type="text"],
+.form-group select {
+    padding: 0.75rem;
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color var(--transition-base),
+        box-shadow var(--transition-base);
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+.form-group input[type="file"] {
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+    color: var(--color-text);
+}
+
+/* Boutons */
+.form-actions {
+    margin-top: var(--space-2);
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-base),
+        transform var(--transition-fast);
+    width: 100%;
+}
+
+/* Repli sur les tokens globaux : `.btn-primary` peut être utilisé hors du
+   panneau admin (ex. modale de réservation de l'agenda), où --admin-primary
+   n'est pas défini — sans repli, le fond devenait transparent (bouton invisible
+   sur carte claire). */
+.btn-primary {
+    background-color: var(--admin-primary, var(--color-primary));
+    color: var(--color-on-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--admin-primary-hover, var(--color-primary-hover));
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+.btn-secondary {
+    background-color: var(--color-surface-2);
+    color: var(--color-on-secondary);
+    border: 1px solid var(--admin-border-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-surface-hover);
+}
+
+/* ── Zones de listes (placeholders) ─────────────────────────── */
+.admin-list-wrapper {
+    margin-top: var(--space-8);
+    border-top: 1px solid var(--admin-border-color);
+    padding-top: var(--space-6);
+}
+
+.admin-list-wrapper h3 {
+    font-size: 1.1rem;
+    margin: 0 0 var(--space-4) 0;
+}
+
+.list-placeholder {
+    background-color: var(--color-surface-2);
+    border: 1px dashed var(--admin-border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-8);
+    text-align: center;
+}
+
+.text-muted {
+    color: var(--admin-text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ── Carte stockage (quota) ─────────────────────────────────── */
+.storage-bar {
+    width: 100%;
+    height: 14px;
+    background-color: var(--color-surface-2);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.storage-bar__fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.storage-bar__fill--ok {
+    background-color: var(--color-success);
+}
+
+.storage-bar__fill--warn {
+    background-color: var(--color-warning);
+}
+
+.storage-bar__fill--danger {
+    background-color: var(--color-danger);
+}
+
+.storage-summary {
+    margin: 0.75rem 0 0.25rem 0;
+}
+
+/* ── Section médias & playlists ─────────────────────────────── */
+.media-full-width {
+    grid-column: 1 / -1;
+}
+
+.media-split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+}
+
+.media-upload-block,
+.media-playlist-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    /* Indispensable : sans min-width:0, une colonne 1fr ne peut pas rétrécir
+       sous la taille de son contenu. Un long texte média élargissait alors la
+       colonne de gauche et poussait la colonne des playlists hors de l'écran. */
+    min-width: 0;
+}
+
+.media-upload-block h3,
+.media-playlist-block h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.playlist-composition-zone {
+    background-color: var(--color-surface-2);
+    border: 1px dashed var(--admin-border-color);
+    border-radius: var(--radius-md);
+    padding: 3rem 2rem;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .media-split-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================================
+   BOÎTE DE RECHERCHE SCROLLABLE
+   Liste enregistrée (profs, machines, classes, médias, playlists) présentée
+   dans une boîte bornée : barre de recherche fixe en haut + zone défilante.
+   ============================================================================ */
+.search-box {
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    overflow: hidden;
+}
+
+.search-box__input {
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--admin-border-color);
+    padding: 0.6rem 0.8rem;
+    font: inherit;
+    font-size: 0.9rem;
+    background-color: var(--color-surface-2);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.search-box__input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.search-box__input:focus {
+    border-bottom-color: var(--admin-primary);
+    box-shadow: inset 0 -1px 0 0 var(--admin-primary);
+}
+
+/* Zone défilante : hauteur bornée, on scrolle à l'intérieur. */
+.search-box__scroll {
+    max-height: 260px;
+    overflow-y: auto;
+    padding: var(--space-3);
+}
+
+.search-box__empty {
+    margin: 0;
+    padding: var(--space-2);
+    text-align: center;
+}
+
+/* ── Listes d'entités (profs, classes, machines) ────────────── */
+.entity-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+/* ── Champs complémentaires (textarea / number) ─────────────── */
+.admin-textarea,
+.admin-number {
+    padding: 0.75rem;
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color var(--transition-base),
+        box-shadow var(--transition-base);
+}
+
+.admin-textarea {
+    resize: vertical;
+}
+
+.admin-textarea:focus,
+.admin-number:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+/* ── Messages d'erreur ──────────────────────────────────────── */
+.admin-error {
+    color: var(--color-danger-soft-text);
+    background-color: var(--color-danger-soft);
+    border: 1px solid var(--color-danger);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 0.75rem;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* ── Listes d'éléments (médias / playlists) ─────────────────── */
+.admin-item-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.entity-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: 0.75rem 1rem;
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-fast);
+    /* Empêche un nom trop long de déborder horizontalement : le contenu
+       reste dans la largeur de la liste plutôt que de forcer un scroll latéral. */
+    min-width: 0;
+}
+
+.entity-list-item:hover {
+    background-color: var(--color-surface-hover);
+}
+
+.entity-label {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-size: 0.95rem;
+    font-weight: 500;
+    /* Le libellé occupe la place restante et autorise la coupure des mots
+       très longs : le texte passe à la ligne au lieu de déborder. */
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.entity-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    background-color: var(--admin-primary);
+    color: var(--color-on-primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    text-transform: capitalize;
+}
+
+.entity-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-ok {
+    color: var(--color-success);
+}
+
+.status-off {
+    color: var(--color-danger);
+}
+
+.btn-danger-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-danger);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--transition-base);
+    flex-shrink: 0;
+}
+
+.btn-danger-sm:hover {
+    background-color: var(--color-danger-hover);
+}
+
+.btn-primary:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.form-error {
+    color: var(--color-danger);
+    font-size: 0.85rem;
+    margin: 0.25rem 0 0 0;
+}
+
+.admin-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+}
+
+/* Ligne média « empilée » (médias texte) */
+.admin-item--stacked {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.admin-item__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    width: 100%;
+}
+
+.admin-item--clickable {
+    cursor: pointer;
+    transition: background-color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.admin-item--clickable:hover {
+    border-color: var(--admin-primary);
+    background-color: var(--color-primary-soft);
+}
+
+.admin-item--selected {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 1px var(--admin-primary);
+}
+
+.admin-item__main {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.admin-item__title {
+    font-weight: 600;
+    /* Autorise le titre à rétrécir dans le flex et à se couper sur plusieurs
+       lignes plutôt que de pousser la largeur de la carte. */
+    min-width: 0;
+}
+
+.admin-item__actions {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Case à cocher « Actif / Active » (remplace les boutons Activer/Désactiver) */
+.actif-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--admin-text-muted);
+    cursor: pointer;
+    user-select: none;
+}
+
+.actif-toggle input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--admin-primary);
+    cursor: pointer;
+}
+
+.actif-toggle input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+}
+
+/* Badges (type de média / état actif) */
+.admin-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-surface-2);
+    color: var(--admin-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.admin-badge--on {
+    background-color: var(--color-success-soft);
+    color: var(--color-success-soft-text);
+}
+
+.admin-badge--off {
+    background-color: var(--color-surface-2);
+    color: var(--admin-text-muted);
+}
+
+/* Texte cliquable et éditable en ligne */
+.editable-text {
+    border: none;
+    background: none;
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    font-size: inherit;
+    font-family: inherit;
+    border-bottom: 1px dashed transparent;
+    /* Un titre très long (ou un mot sans espace) passe à la ligne au lieu de
+       déborder et de forcer un scroll horizontal de la carte média. */
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.editable-text:hover {
+    border-bottom-color: var(--admin-primary);
+    color: var(--admin-primary);
+}
+
+.editable-text:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.admin-item__title-input {
+    padding: 0.2rem 0.4rem;
+    border: 1px solid var(--admin-primary);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    min-width: 12rem;
+    max-width: 100%;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+/* Ligne de contenu d'un média texte */
+.admin-item__text {
+    width: 100%;
+    margin-top: 0.35rem;
+    padding-top: 0.35rem;
+    border-top: 1px dashed var(--admin-border-color);
+}
+
+.admin-item__text-preview {
+    display: block;
+    max-width: 100%;
+    font-size: 0.85rem;
+    color: var(--admin-text-muted);
+    /* Le contenu d'un média texte passe à la ligne (y compris un mot très long
+       sans espace) au lieu de déborder et de provoquer un scroll horizontal. */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.admin-item__text-input {
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+/* Durée cliquable (édition en ligne) */
+.duree-trigger {
+    border: 1px dashed transparent;
+    background: none;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--admin-text-muted);
+    cursor: pointer;
+}
+
+.duree-trigger:hover {
+    border-color: var(--admin-primary);
+    color: var(--admin-primary);
+}
+
+.duree-trigger:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.media-duree-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.media-duree-edit__input {
+    width: 5rem;
+    padding: 0.3rem 0.4rem;
+    font-size: 0.9rem;
+}
+
+/* Boutons « liens » pour les actions de ligne */
+.btn-link {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--admin-primary);
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.btn-link:disabled {
+    color: var(--admin-text-muted);
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+.btn-link--danger {
+    color: var(--color-danger);
+}
+
+/* ── Composition de playlist ────────────────────────────────── */
+.playlist-composition {
+    margin-top: var(--space-6);
+    border-top: 1px solid var(--admin-border-color);
+    padding-top: var(--space-6);
+}
+
+.playlist-composition h4 {
+    margin: 0 0 var(--space-4) 0;
+    font-size: 1rem;
+}
+
+.playlist-add-form {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+}
+
+.playlist-add-form select {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+.playlist-add-form .btn-secondary {
+    width: auto;
+    white-space: nowrap;
+}
+
+.playlist-order-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.playlist-order-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: 0.4rem 0.5rem;
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    cursor: grab;
+    transition: background-color var(--transition-fast),
+        border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.playlist-order-item:hover {
+    border-color: var(--admin-primary);
+    background-color: var(--color-primary-soft);
+}
+
+.playlist-order-item:active {
+    cursor: grabbing;
+}
+
+.playlist-order-item--dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.playlist-order-item--dragover {
+    border-color: var(--admin-primary);
+    box-shadow: inset 0 3px 0 -1px var(--admin-primary);
+    background-color: var(--color-primary-soft);
+}
+
+.playlist-order-item__title {
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+}
+
+.playlist-order-item__handle {
+    color: var(--admin-text-muted);
+    cursor: grab;
+    user-select: none;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.playlist-order-item--dragging .playlist-order-item__handle {
+    cursor: grabbing;
+}
+
+/* ============================================================================
+   RESPONSIVE — panneau d'administration (PC, tablette, mobile)
+   ============================================================================ */
+
+/* ── Tablette : la sidebar repasse en barre horizontale empilée ──────────── */
+@media (max-width: 860px) {
+    .admin-shell {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "topbar"
+            "nav"
+            "content";
+    }
+    .admin-nav {
+        position: static;
+        height: auto;
+        overflow: visible;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+    }
+    .admin-nav__links {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .admin-nav__brand {
+        margin-bottom: var(--space-3);
+    }
+    .admin-topbar {
+        position: static;
+    }
+}
+
+/* ── Tablette : réduire les marges de contenu ────────────────────────────── */
+@media (max-width: 768px) {
+    .admin-content {
+        padding: var(--space-6) var(--space-5);
+    }
+    .admin-group__grid {
+        gap: var(--space-5);
+    }
+    /* Les sous-sections Agenda ne sont plus forcées à la même hauteur une fois
+       empilées : on libère la chaîne flex pour éviter les grands blancs. */
+    .admin-group .admin-card,
+    .admin-group .admin-card .card-body,
+    .admin-group .admin-list-wrapper,
+    .admin-group .search-box {
+        display: block;
+    }
+    .admin-group .admin-form {
+        min-height: 0;
+    }
+    .admin-group .search-box__scroll {
+        flex: none;
+        max-height: 240px;
+    }
+}
+
+/* ── Mobile : topbar empilée, sélecteur de styles dégagé ─────────────────── */
+@media (max-width: 599px) {
+    .admin-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+        padding: var(--space-4);
+        /* Dégage l'espace du sélecteur de styles flottant (haut-droite). */
+        padding-top: 56px;
+    }
+    .admin-topbar__title h1 {
+        font-size: 1.25rem;
+    }
+    .admin-topbar__actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .admin-content {
+        padding: var(--space-4);
+    }
+    .admin-nav {
+        padding: var(--space-4);
+    }
+    .btn-primary,
+    .btn-secondary {
+        font-size: 0.95rem;
+    }
+}

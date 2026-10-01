@@ -1,0 +1,97 @@
+### Récupérer tous les professeurs
+GET http://localhost/LPMF_projet_stage/app/backend/public/api/professeurs
+Content-Type: application/json
+
+###
+
+### Récupérer toutes les classes
+GET http://localhost/LPMF_projet_stage/app/backend/public/api/classes
+Content-Type: application/json
+
+###
+
+### Récupérer les médias
+GET http://localhost/LPMF_projet_stage/app/backend/public/api/medias
+Content-Type: application/json
+
+###
+
+### Créer une nouvelle réservation (Nécessite un accès professeur)
+POST http://localhost/LPMF_projet_stage/app/backend/public/api/reservations
+Content-Type: application/json
+Authorization: Bearer test
+
+{
+  "machine_id": 1,
+  "professeur_id": 2,
+  "classe_id": 3,
+  "debut": "2026-05-06T10:00:00",
+  "fin": "2026-05-06T12:00:00",
+  "description": "Travail sur la motorisation - banc d'essai"
+}
+
+### Supprimer une réservation
+DELETE http://localhost/LPMF_projet_stage/app/backend/public/api/reservations/1
+Content-Type: application/json
+Authorization: Bearer test
+
+###
+
+### --- MEDIAS : upload + create ---
+
+### 1) Uploader un fichier image/vidéo (multipart/form-data)
+###   - Renvoie { data: { url, mime_type, size_bytes } }
+###   - Le champ `file` doit être un fichier réel sur ton disque.
+POST http://localhost/LPMF_projet_stage/app/backend/public/api/medias/upload
+Authorization: Bearer test
+Content-Type: multipart/form-data; boundary=----LPMFBoundary
+
+------LPMFBoundary
+Content-Disposition: form-data; name="file"; filename="exemple.mp4"
+Content-Type: video/mp4
+
+< ./exemple.mp4
+------LPMFBoundary--
+
+###
+
+### 2) Créer un média IMAGE en s'appuyant sur l'URL retournée par l'upload
+POST http://localhost/LPMF_projet_stage/app/backend/public/api/medias
+Content-Type: application/json
+Authorization: Bearer test
+
+{
+  "titre": "Affiche journée portes ouvertes",
+  "type": "image",
+  "url_fichier": "/uploads/REMPLACE_PAR_URL_RETOURNEE.jpg",
+  "duree_sec": 10,
+  "actif": true
+}
+
+###
+
+### 3) Créer un média TEXTE (pas d'upload, juste le contenu inline en BDD)
+POST http://localhost/LPMF_projet_stage/app/backend/public/api/medias
+Content-Type: application/json
+Authorization: Bearer test
+
+{
+  "titre": "Info importante",
+  "type": "texte",
+  "contenu_texte": "Cours d'atelier reporté à mercredi 14h en salle B12.",
+  "duree_sec": 15,
+  "actif": true
+}
+
+###
+
+### 4) Mettre à jour le contenu d'un média texte
+PUT http://localhost/LPMF_projet_stage/app/backend/public/api/medias/1
+Content-Type: application/json
+Authorization: Bearer test
+
+{
+  "contenu_texte": "Nouveau message affiché à l'écran."
+}
+
+###

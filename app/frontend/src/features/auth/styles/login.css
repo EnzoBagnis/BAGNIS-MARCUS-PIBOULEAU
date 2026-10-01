@@ -1,0 +1,196 @@
+/* ============================================================================
+   login.css — page de connexion (clé d'accès admin / prof)
+   Centrée verticalement et horizontalement, carte compacte.
+   ============================================================================ */
+
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: var(--gradient-hero);
+}
+
+/* Thème Moderne (sombre) : carte de connexion un peu plus claire que les
+   surfaces, pour la détacher du fond ardoise. */
+[data-theme="moderne"] .login-card {
+  background: #1e2634;
+  border-color: #313c4d;
+}
+
+.login-card {
+  width: min(420px, 100%);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Emplacement réservé au logo du lycée (au-dessus du titre). */
+.login-card__header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+.login-card__header h1 {
+  margin: 0 0 var(--space-1);
+  font-size: 1.75rem;
+  letter-spacing: 0.04em;
+}
+.login-card__header p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.login-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.login-form__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* Champ + bouton « œil » sur la même ligne : le wrapper se charge du
+   positionnement, l'input réserve de la place à droite pour le bouton. */
+.login-form__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-form__input {
+  width: 100%;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 0.7rem 2.75rem 0.7rem 0.85rem;
+  font: inherit;
+  letter-spacing: 0.15em;
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.login-form__input::placeholder {
+  color: var(--color-text-muted);
+  letter-spacing: normal;
+  opacity: 0.7;
+}
+
+.login-form__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+/* Bouton « œil » : afficher / masquer la clé saisie. */
+.login-form__toggle {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.login-form__toggle:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+.login-form__toggle:focus-visible {
+  outline: none;
+  color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+.login-form__toggle:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.login-form__remember {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  user-select: none;
+}
+
+.login-form__remember input[type="checkbox"] {
+  accent-color: var(--color-primary);
+  width: 16px;
+  height: 16px;
+}
+
+.login-form__error {
+  padding: 0.65rem 0.8rem;
+  background: var(--color-danger-soft);
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger-soft-text);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+}
+
+.login-form__submit {
+  padding: 0.8rem 1rem;
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast),
+    border-color var(--transition-fast), transform var(--transition-fast);
+}
+.login-form__submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+.login-form__submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.login-form__submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.login-card__hint {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.45;
+}
+
+/* Sélecteur de couleurs (Épuré · Moderne · Coloré) en pied de carte, centré. */
+.login-card__theme {
+  margin-top: var(--space-5);
+  display: flex;
+  justify-content: center;
+}

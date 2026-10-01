@@ -1,0 +1,15 @@
+# Dépendances
+/vendor/
+
+# Environnement (identifiants sensibles)
+.env
+
+# Stockage local
+/storage/logs/
+/storage/cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -1,0 +1,37 @@
+/* ============================================================================
+   konami.css — easter egg « Konami code »
+   ----------------------------------------------------------------------------
+   Déclenché par : ↑ ↑ ↓ ↓ ← → ← → B A (clavier) ou ↑ ↑ ↓ ↓ ← → ← → OK OK
+   (télécommande TV). La classe `konami-spin` est posée sur <body> par le
+   composant KonamiEasterEgg (interrupteur : on rejoue le code pour l'arrêter).
+   Fait tourner toute l'interface sur elle-même et emballe les indicateurs de
+   chargement présents à l'écran.
+   ============================================================================ */
+
+@keyframes konami-tourne {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Pendant l'effet, on masque le débordement pour éviter l'apparition de barres
+   de défilement quand l'interface pivote. */
+body.konami-spin {
+  overflow: hidden;
+}
+
+/* Toute l'application tourne en continu, à vitesse constante (linéaire) et en
+   boucle infinie, pivot au centre de l'écran. */
+body.konami-spin #root {
+  animation: konami-tourne 3s linear infinite;
+  transform-origin: center center;
+}
+
+/* Les spinners de chargement éventuellement affichés s'emballent le temps de
+   l'effet (ex. chargement d'un média sur l'écran kiosque). */
+body.konami-spin .media-player__spinner {
+  animation-duration: 0.18s;
+}
